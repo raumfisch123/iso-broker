@@ -16,48 +16,59 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class BrockerApplicationTests {
 
-	@Autowired
-	private SignedContractDataInMemoryRepository signedContractDataInMemoryRepository;
+    @Autowired
+    private SignedContractDataInMemoryRepository signedContractDataInMemoryRepository;
 
-	@Test
-	void keyFactory() {
-		final SignedContratDataReference signedContratDataReference = new SignedContratDataReference("emaid", "pcid", "version", new Date(), "daUrl");
-		KeyFactory keyFactory = new KeyFactory() {};
+    @Test
+    void keyFactory() {
+        final SignedContratDataReference signedContratDataReference = new SignedContratDataReference(
+                "alias", "emaid", "pcid", "version", new Date(), "daUrl");
+        KeyFactory keyFactory = new KeyFactory();
 
-		String key = keyFactory.createKey(signedContratDataReference);
-		assertThat(key).isEqualTo("emaid::pcid::version");
+        String key = keyFactory.createKey(signedContratDataReference);
+        assertThat(key).isEqualTo("alias::emaid::pcid::version");
 
-		String key2 = keyFactory.buildKey(signedContratDataReference.getEmaid(), signedContratDataReference.getPcid(), signedContratDataReference.getExiVersion());
-		assertThat(key2).isEqualTo("emaid::pcid::version");
-	}
+        String key2 = keyFactory.buildKey(signedContratDataReference.getAlias(), signedContratDataReference.getEmaid(),
+                signedContratDataReference.getPcid(), signedContratDataReference.getExiVersion());
+        assertThat(key2).isEqualTo("alias::emaid::pcid::version");
+    }
 
-	@Test
-	void testInMemoryRepository(){
-		final SignedContratDataReference signedContratDataReference = new SignedContratDataReference("emaid", "pcid", "version", new Date(), "url");
-		signedContractDataInMemoryRepository.save(signedContratDataReference);
-		Optional<SignedContratDataReference> opt = signedContractDataInMemoryRepository.find("emaid", "pcid", "version");
-		assertThat(opt.isEmpty()).isFalse();
-		assertThat(opt.get().getEmaid()).isEqualTo("emaid");
-		assertThat(opt.get().getPcid()).isEqualTo("pcid");
-		assertThat(opt.get().getExiVersion()).isEqualTo("version");
+    @Test
+    void testInMemoryRepository() {
+        final SignedContratDataReference signedContratDataReference =
+                new SignedContratDataReference("alias", "emaid", "pcid", "version", new Date(), "url");
+        signedContractDataInMemoryRepository.save(signedContratDataReference);
+        Optional<SignedContratDataReference> opt = signedContractDataInMemoryRepository
+                .find("alias", "emaid", "pcid", "version");
+        assertThat(opt.isEmpty()).isFalse();
+        assertThat(opt.get().getAlias()).isEqualTo("alias");
+        assertThat(opt.get().getEmaid()).isEqualTo("emaid");
+        assertThat(opt.get().getPcid()).isEqualTo("pcid");
+        assertThat(opt.get().getExiVersion()).isEqualTo("version");
 
-		Optional<SignedContratDataReference> optNullFind = signedContractDataInMemoryRepository.find("emaid1", "pcid", "version");
-		assertThat(optNullFind.isEmpty()).isTrue();
-		assertThatThrownBy(() -> optNullFind.get()).isInstanceOf(NoSuchElementException.class);
+        Optional<SignedContratDataReference> optNullFind = signedContractDataInMemoryRepository
+                .find("alias", "emaid1", "pcid", "version");
+        assertThat(optNullFind.isEmpty()).isTrue();
+        assertThatThrownBy(() -> optNullFind.get()).isInstanceOf(NoSuchElementException.class);
 
-		Optional<SignedContratDataReference> optNullDelete = signedContractDataInMemoryRepository.delete("emaid1", "pcid", "version");
-		assertThat(optNullDelete.isEmpty()).isTrue();
+        Optional<SignedContratDataReference> optNullDelete = signedContractDataInMemoryRepository
+                .delete("alias", "emaid1", "pcid", "version");
+        assertThat(optNullDelete.isEmpty()).isTrue();
 
-		Optional<SignedContratDataReference> optDelete = signedContractDataInMemoryRepository.delete("emaid", "pcid", "version");
-		assertThat(optDelete.isEmpty()).isFalse();
-		assertThat(opt.get().getEmaid()).isEqualTo("emaid");
-		assertThat(opt.get().getPcid()).isEqualTo("pcid");
-		assertThat(opt.get().getExiVersion()).isEqualTo("version");
+        Optional<SignedContratDataReference> optDelete = signedContractDataInMemoryRepository
+                .delete("alias", "emaid", "pcid", "version");
+        assertThat(optDelete.isEmpty()).isFalse();
+        assertThat(optDelete.get().getAlias()).isEqualTo("alias");
+        assertThat(optDelete.get().getEmaid()).isEqualTo("emaid");
+        assertThat(optDelete.get().getPcid()).isEqualTo("pcid");
+        assertThat(optDelete.get().getExiVersion()).isEqualTo("version");
 
-		Optional<SignedContratDataReference> optNullFind1 = signedContractDataInMemoryRepository.delete("emaid", "pcid", "version");
-		assertThat(optNullFind1.isEmpty()).isTrue();
+        Optional<SignedContratDataReference> optNullFind1 = signedContractDataInMemoryRepository
+                .delete("alias", "emaid", "pcid", "version");
+        assertThat(optNullFind1.isEmpty()).isTrue();
 
-		Optional<SignedContratDataReference> optNullFind3 = signedContractDataInMemoryRepository.delete(null, "pcid", "version");
-	}
+        Optional<SignedContratDataReference> optNullFind3 = signedContractDataInMemoryRepository
+                .delete("alias", null, "pcid", "version");
+    }
 
 }

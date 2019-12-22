@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface SignedContractDataInMemoryRepositoryInt {
     SignedContratDataReference save(final SignedContratDataReference signedContratDataReference);
 
-    Optional<SignedContratDataReference> find(final String emaid, final String pcid, final String exiVersion);
+    Optional<SignedContratDataReference> find(final String alias, final String emaid, final String pcid, final String exiVersion);
 
-    Optional<SignedContratDataReference> delete(final String emaid, final String pcid, final String exiVersion);
+    Optional<SignedContratDataReference> delete(final String alias, final String emaid, final String pcid, final String exiVersion);
 }

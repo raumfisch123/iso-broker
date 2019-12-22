@@ -9,29 +9,28 @@ import java.util.*;
 @Repository
 public class SignedContractDataInMemoryRepository implements SignedContractDataInMemoryRepositoryInt {
 
-    private final KeyFactory keyFactory = new KeyFactory() {};
 
     private final Map<String, String> repository = new HashMap<>();
 
     @Override
     public SignedContratDataReference save(final SignedContratDataReference signedContratDataReference){
         Objects.requireNonNull(signedContratDataReference, "SignedContractDataReference should not be null.");
-        repository.put(keyFactory.createKey(signedContratDataReference), signedContratDataReference.getUrl());
+        repository.put(KeyFactory.createKey(signedContratDataReference), signedContratDataReference.getUrl());
         return signedContratDataReference;
     }
 
     @Override
-    public Optional<SignedContratDataReference> find( final String emaid,  final String pcid,  final String exiVersion){
+    public Optional<SignedContratDataReference> find( final String alias, final String emaid,  final String pcid,  final String exiVersion){
         return Optional
-                .ofNullable(repository.get(keyFactory.buildKey(emaid, pcid, exiVersion)))
-                .map(url -> new SignedContratDataReference(emaid, pcid, exiVersion, new Date(), url));
+                .ofNullable(repository.get(KeyFactory.buildKey(alias, emaid, pcid, exiVersion)))
+                .map(url -> new SignedContratDataReference(alias, emaid, pcid, exiVersion, new Date(), url));
     }
 
     @Override
-    public Optional<SignedContratDataReference> delete( final String emaid,  final String pcid,  final String exiVersion){
+    public Optional<SignedContratDataReference> delete( final String alias, final String emaid,  final String pcid,  final String exiVersion){
         return Optional
-                .ofNullable(repository.remove(keyFactory.buildKey(emaid, pcid, exiVersion)))
-                .map(url -> new SignedContratDataReference(emaid, pcid, exiVersion, new Date(), url));
+                .ofNullable(repository.remove(KeyFactory.buildKey(alias, emaid, pcid, exiVersion)))
+                .map(url -> new SignedContratDataReference(alias, emaid, pcid, exiVersion, new Date(), url));
     }
 
 }

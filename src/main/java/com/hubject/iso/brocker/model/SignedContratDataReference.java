@@ -12,6 +12,7 @@ import java.util.Date;
 public class SignedContratDataReference {
 
     // dont forget to validate the emaid pcid exiVerson date and url :-)
+    private String alias;
     private String emaid;
     private String pcid;
     private String exiVersion;
