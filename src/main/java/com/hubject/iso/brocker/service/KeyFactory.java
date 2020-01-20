@@ -12,4 +12,8 @@ public class KeyFactory {
         return alias + "::" + emaid + "::" + pcid + "::" + exiVersion;
     }
 
+    public static String buildKey(String alias, String emaid){
+        return alias + "::" + emaid;
+    }
+
 }
